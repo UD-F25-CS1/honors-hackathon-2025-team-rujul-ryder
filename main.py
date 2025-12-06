@@ -6,18 +6,24 @@ import os
 
 hide_debug_information()
 
+# =============================================================================
 # INITIAL SETUP & API KEY LOADING
+# =============================================================================
+# FIX: Use os.getenv once to retrieve the key from the GitHub Action environment,
+# then explicitly set os.environ['GEMINI_API_KEY'] for Drafter's compilation.
 
-# load_dotenv()
+GITHUB_ACTION_KEY = os.getenv("GEMINI_API_KEY")
 
-# Get the key from the environment and ensure it's used by Drafter/Gemini
-GEMINI_KEY = os.getenv("GEMINI_API_KEY")
-
-if GEMINI_KEY:
-    os.environ['GEMINI_API_KEY'] = GEMINI_KEY 
+if GITHUB_ACTION_KEY:
+    # Store globally for function checks
+    GEMINI_KEY = GITHUB_ACTION_KEY
+    
+    # Set the key in os.environ for Drafter's internal LLM functionality
+    os.environ['GEMINI_API_KEY'] = GITHUB_ACTION_KEY
     print("GEMINI_API_KEY loaded successfully.")
 else:
-    print("ERROR: GEMINI_API_KEY not found in the environment (check .env file).")
+    GEMINI_KEY = None # Ensure GEMINI_KEY is None if not found
+    print("ERROR: GEMINI_API_KEY not found in the environment (check GitHub Secrets).")
 
 
 # DATACLASSES
@@ -47,6 +53,10 @@ class State:
     log_history: list  # list[DailyLogEntry]
     meal_cache: str
     challenge_cache: str
+
+# AI functions
+# ... (The rest of your AI functions, CSS, JS, and Routes remain the same) ...
+# ... (They rely on GEMINI_KEY and call_gemini, which now works via os.environ) ...
 
 # AI functions
 
