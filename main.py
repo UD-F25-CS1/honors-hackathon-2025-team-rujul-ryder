@@ -1,6 +1,3 @@
-# ============================================================================
-# CONSOLIDATED AND CORRECTED IMPORTS
-# ============================================================================
 from drafter import *
 from drafter.llm import LLMMessage, LLMError, call_gemini
 from dataclasses import dataclass
@@ -9,9 +6,7 @@ from dotenv import load_dotenv
 
 hide_debug_information()
 
-# ============================================================================
 # INITIAL SETUP & API KEY LOADING
-# ============================================================================
 
 load_dotenv()
 
@@ -19,16 +14,13 @@ load_dotenv()
 GEMINI_KEY = os.getenv("GEMINI_API_KEY")
 
 if GEMINI_KEY:
-    # This line ensures Drafter and the underlying Gemini library can find the key
     os.environ['GEMINI_API_KEY'] = GEMINI_KEY 
-    print("✅ GEMINI_API_KEY loaded successfully.")
+    print("GEMINI_API_KEY loaded successfully.")
 else:
-    # Note: Drafter will automatically show an error if call_gemini is used without a key.
-    print("❌ ERROR: GEMINI_API_KEY not found in the environment (check .env file).")
+    print("ERROR: GEMINI_API_KEY not found in the environment (check .env file).")
 
-# ============================================================================
-# DATACLASSES - Core Data Models
-# ============================================================================
+
+# DATACLASSES
 
 @dataclass
 class UserProfile:
@@ -56,9 +48,7 @@ class State:
     meal_cache: str
     challenge_cache: str
 
-# ============================================================================
-# AI CORE FUNCTIONS (FINAL FIXES APPLIED)
-# ============================================================================
+# AI functions
 
 def analyze_meal_with_ai(meal_description: str) -> str:
     """Use Drafter's call_gemini to analyze a meal"""
@@ -123,9 +113,7 @@ Make it achievable, fun, and relevant to their goal. Keep it brief and actionabl
         return f"Challenge generation failed (Internal Error): {str(e)}"
 
 
-# ============================================================================
 # CSS styling
-# ============================================================================
 
 CUSTOM_CSS = """
 <style>
@@ -264,9 +252,8 @@ CUSTOM_CSS = """
 </style>
 """
 
-# ============================================================================
+
 # JAVASCRIPT - Interactive Features
-# ============================================================================
 
 MOOD_SLIDER_JS = """
 <script>
@@ -285,9 +272,7 @@ MOOD_SLIDER_JS = """
 </script>
 """
 
-# ============================================================================
 # ROUTES - Application Pages
-# ============================================================================
 
 @route
 def index(state: State) -> Page:
@@ -613,9 +598,7 @@ def progress(state: State) -> Page:
     )
 
 
-# ============================================================================
 # INITIALIZATION
-# ============================================================================
 
 start_server(State(
     profile=UserProfile(name="", height=0, health_goal="weight_loss"),
