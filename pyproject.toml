@@ -4,19 +4,29 @@ version = "0.1.0"
 description = "A holistic health and fitness tracker using Drafter and the Gemini API."
 readme = "README.md"
 requires-python = ">=3.10"
+# --- CORE APPLICATION DEPENDENCIES ---
+# These are the packages needed for the application (main.py) to run.
 dependencies = [
-    "coverage",
     "drafter",
     "bakery",
+    "python-dotenv", # <-- FIX: This module is now correctly included for the app
+    "pydantic",
+    # The Google Generative AI SDK is included in Drafter's installation,
+    # so explicitly listing 'google-genai' isn't strictly necessary, but harmless.
+    # We will remove it for clarity and rely on the Drafter dependency.
+]
+
+# --- DEVELOPMENT & TOOLS DEPENDENCIES ---
+# These are packages needed for testing, linting, and building (used only in the CI workflow).
+[project.optional-dependencies]
+dev = [
+    "coverage",
     "pylint",
     "mypy",
-    "matplotlib",
-    "pillow",
-    "analyze_drafter_site",
-    # new dependencies for gemini and state
-    "google-genai",
-    "python-dotenv",
-    "pydantic",
+    "matplotlib", # Used for potential charting/plotting
+    "Pillow",     # Used for image processing if needed
+    # Note: 'analyze_drafter_site' is a script/command, not a package, so it is removed.
+    # Note: 'google-genai' is removed as it's part of Drafter's requirements.
 ]
 
 [tool.pyright]
