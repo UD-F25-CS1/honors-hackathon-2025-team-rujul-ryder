@@ -9,7 +9,7 @@ requires-python = ">=3.10"
 dependencies = [
     "drafter",
     "bakery",
-    "python-dotenv", # <-- FIX: This module is now correctly included for the app
+    # "python-dotenv", # <-- FIX: This module is now correctly included for the app
     "pydantic",
     # The Google Generative AI SDK is included in Drafter's installation,
     # so explicitly listing 'google-genai' isn't strictly necessary, but harmless.
