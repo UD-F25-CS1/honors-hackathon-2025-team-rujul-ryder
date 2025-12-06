@@ -2,13 +2,13 @@ from drafter import *
 from drafter.llm import LLMMessage, LLMError, call_gemini
 from dataclasses import dataclass
 import os
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 hide_debug_information()
 
 # INITIAL SETUP & API KEY LOADING
 
-load_dotenv()
+# load_dotenv()
 
 # Get the key from the environment and ensure it's used by Drafter/Gemini
 GEMINI_KEY = os.getenv("GEMINI_API_KEY")
