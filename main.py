@@ -2,9 +2,11 @@ from drafter import *
 from drafter.llm import LLMMessage, LLMError, call_gemini
 from dataclasses import dataclass
 import os
-# The python-dotenv module and its import/call are removed as they are not needed 
-# and caused deployment issues on static hosts.
 
+# =============================================================================
+# SITE INFORMATION SETUP (MOVED UP)
+# =============================================================================
+# MUST be called after imports and before any other major logic or class definitions.
 set_site_information(
     author="rydero@udel.edu",
     description="""The website keeps a log of your previous entries, where you put in your mood rating, 
@@ -13,6 +15,8 @@ set_site_information(
     sources=["Official Drafter documentation, Gemini"],
     links=["https://github.com/UD-F25-CS1/honors-hackathon-2025-team-rujul-ryder/tree/main"]
 )
+# The python-dotenv module and its import/call are removed as they are not needed 
+# and caused deployment issues on static hosts.
 
 hide_debug_information()
 
@@ -31,7 +35,6 @@ def check_key_available() -> bool:
     # This check is safer than calling os.getenv/os.environ.get repeatedly in AI functions.
     # It relies on the environment being set correctly during the GitHub Action build.
     return bool(os.environ.get("GEMINI_API_KEY"))
-
 
 # DATACLASSES
 
