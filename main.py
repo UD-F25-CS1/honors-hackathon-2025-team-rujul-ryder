@@ -13,7 +13,7 @@ set_site_information(
     what you ate recently, and the level of exercise you performed as of late. Combining all of this information, 
     the AI feature inside helps you to develop a plan and analyzes your patterns.""",
     sources=["Official Drafter documentation, Gemini"],
-    planning=["IMG_5342.jpeg"]
+    planning=["IMG_5342.jpeg"],
     links=["https://github.com/UD-F25-CS1/honors-hackathon-2025-team-rujul-ryder/tree/main"]
 )
 # The python-dotenv module and its import/call are removed as they are not needed 
