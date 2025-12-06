@@ -8,26 +8,20 @@ import os
 hide_debug_information()
 
 # =============================================================================
-# INITIAL SETUP & API KEY LOADING
+# INITIAL SETUP & API KEY LOADING (Simplified)
 # =============================================================================
-# FIX: Use os.environ.get() instead of os.getenv() to ensure compatibility
-# with the Drafter compiler/JavaScript environment.
+# FIX: The key is no longer explicitly loaded here. Drafter's call_gemini() 
+# will automatically look for os.environ['GEMINI_API_KEY'] when executed, which 
+# is set by the GitHub Action secret during runtime.
+# We initialize GEMINI_KEY just for the local check function below.
+GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "") # Use get() as a fallback to avoid compilation errors
 
-# Get the key from the environment (set via GitHub Secrets).
-GITHUB_ACTION_KEY = os.environ.get("GEMINI_API_KEY")
-
-if GITHUB_ACTION_KEY:
-    # 1. Store the key in a global Python variable (GEMINI_KEY) for function checks.
-    GEMINI_KEY = GITHUB_ACTION_KEY
-    
-    # 2. Set it back into os.environ for Drafter/Gemini's internal functionality.
-    os.environ['GEMINI_API_KEY'] = GITHUB_ACTION_KEY
-    print("GEMINI_API_KEY loaded successfully.")
-    
-else:
-    # Set GEMINI_KEY to None and print an error message.
-    GEMINI_KEY = None
-    print("ERROR: GEMINI_API_KEY not found in the environment (check GitHub Secrets).")
+# --- Local Utility Function for Key Check ---
+def check_key_available() -> bool:
+    """Checks if the API key is present in the environment."""
+    # This check is safer than calling os.getenv/os.environ.get repeatedly in AI functions.
+    # It relies on the environment being set correctly during the GitHub Action build.
+    return bool(os.environ.get("GEMINI_API_KEY"))
 
 
 # DATACLASSES
@@ -62,8 +56,9 @@ class State:
 
 def analyze_meal_with_ai(meal_description: str) -> str:
     """Use Drafter's call_gemini to analyze a meal"""
-    if not GEMINI_KEY:
-        return "Analysis failed: GEMINI_API_KEY not set."
+    # Use the cleaner check_key_available function
+    if not check_key_available():
+        return "Analysis failed: GEMINI_API_KEY not set. Check your GitHub Secrets."
         
     prompt = f"""Analyze this meal in detail:
 {meal_description}
@@ -94,8 +89,9 @@ Keep it concise and friendly."""
 
 def generate_health_challenge(health_goal: str, mood: int) -> str:
     """Use Drafter's call_gemini to generate a personalized health challenge"""
-    if not GEMINI_KEY:
-        return "Challenge generation failed: GEMINI_API_KEY not set."
+    # Use the cleaner check_key_available function
+    if not check_key_available():
+        return "Challenge generation failed: GEMINI_API_KEY not set. Check your GitHub Secrets."
         
     prompt = f"""Create a short, motivating 10-minute health challenge.
 
@@ -434,7 +430,11 @@ def analyze_meal_result(state: State, meal_to_analyze: str) -> Page:
     if not meal_to_analyze.strip():
         analysis_text = "Please enter a meal description to analyze."
     else:
-        analysis_text = analyze_meal_with_ai(meal_to_analyze)
+        # Use the utility function for the key check
+        if not check_key_available():
+            analysis_text = "Analysis failed: GEMINI_API_KEY not set. Check your GitHub Secrets."
+        else:
+            analysis_text = analyze_meal_with_ai(meal_to_analyze)
     
     return Page(
         state,
@@ -486,7 +486,11 @@ def challenge_result(state: State) -> Page:
     if len(state.log_history) > 0:
         latest_mood = state.log_history[-1].mood
     
-    challenge_text = generate_health_challenge(state.profile.health_goal, latest_mood)
+    # Check key before calling the AI function
+    if not check_key_available():
+        challenge_text = "Challenge generation failed: GEMINI_API_KEY not set. Check your GitHub Secrets."
+    else:
+        challenge_text = generate_health_challenge(state.profile.health_goal, latest_mood)
     
     return Page(
         state,
