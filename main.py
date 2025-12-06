@@ -5,6 +5,15 @@ import os
 # The python-dotenv module and its import/call are removed as they are not needed 
 # and caused deployment issues on static hosts.
 
+set_site_information(
+    author="rydero@udel.edu",
+    description="""The website keeps a log of your previous entries, where you put in your mood rating, 
+    what you ate recently, and the level of exercise you performed as of late. Combining all of this information, 
+    the AI feature inside helps you to develop a plan and analyzes your patterns.""",
+    sources=["Official Drafter documentation, Gemini"],
+    links=["https://github.com/UD-F25-CS1/honors-hackathon-2025-team-rujul-ryder/tree/main"]
+)
+
 hide_debug_information()
 
 # =============================================================================
