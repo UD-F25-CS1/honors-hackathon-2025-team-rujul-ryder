@@ -2,27 +2,31 @@ from drafter import *
 from drafter.llm import LLMMessage, LLMError, call_gemini
 from dataclasses import dataclass
 import os
-# from dotenv import load_dotenv
+# The python-dotenv module and its import/call are removed as they are not needed 
+# and caused deployment issues on static hosts.
 
 hide_debug_information()
 
 # =============================================================================
 # INITIAL SETUP & API KEY LOADING
 # =============================================================================
-# FIX: Use os.getenv once to retrieve the key from the GitHub Action environment,
-# then explicitly set os.environ['GEMINI_API_KEY'] for Drafter's compilation.
+# FIX: Use os.environ.get() instead of os.getenv() to ensure compatibility
+# with the Drafter compiler/JavaScript environment.
 
-GITHUB_ACTION_KEY = os.getenv("GEMINI_API_KEY")
+# Get the key from the environment (set via GitHub Secrets).
+GITHUB_ACTION_KEY = os.environ.get("GEMINI_API_KEY")
 
 if GITHUB_ACTION_KEY:
-    # Store globally for function checks
+    # 1. Store the key in a global Python variable (GEMINI_KEY) for function checks.
     GEMINI_KEY = GITHUB_ACTION_KEY
     
-    # Set the key in os.environ for Drafter's internal LLM functionality
+    # 2. Set it back into os.environ for Drafter/Gemini's internal functionality.
     os.environ['GEMINI_API_KEY'] = GITHUB_ACTION_KEY
     print("GEMINI_API_KEY loaded successfully.")
+    
 else:
-    GEMINI_KEY = None # Ensure GEMINI_KEY is None if not found
+    # Set GEMINI_KEY to None and print an error message.
+    GEMINI_KEY = None
     print("ERROR: GEMINI_API_KEY not found in the environment (check GitHub Secrets).")
 
 
@@ -55,10 +59,6 @@ class State:
     challenge_cache: str
 
 # AI functions
-# ... (The rest of your AI functions, CSS, JS, and Routes remain the same) ...
-# ... (They rely on GEMINI_KEY and call_gemini, which now works via os.environ) ...
-
-# AI functions
 
 def analyze_meal_with_ai(meal_description: str) -> str:
     """Use Drafter's call_gemini to analyze a meal"""
@@ -81,7 +81,7 @@ Keep it concise and friendly."""
             model="gemini-1.5-flash"
         )
         
-        # FIX: Check if the result is an error object and use str() to get the error message
+        # Check if the result is an error object and use str() to get the error message
         if isinstance(result, LLMError):
             return f"🚫 AI Analysis Failed: {str(result)}"
         
@@ -112,7 +112,7 @@ Make it achievable, fun, and relevant to their goal. Keep it brief and actionabl
             model="gemini-1.5-flash"
         )
         
-        # FIX: Check if the result is an error object and use str() to get the error message
+        # Check if the result is an error object and use str() to get the error message
         if isinstance(result, LLMError):
             return f"🚫 Challenge Generation Failed: {str(result)}"
         
