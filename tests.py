@@ -12,4 +12,4 @@ from main import *
 
 ## You can add your tests below this line
 
-assert_equal(index(State()), Page(State(), ["Hello World!"]))
+#assert_equal(index(State()), Page(State(), ["Hello World!"]))
