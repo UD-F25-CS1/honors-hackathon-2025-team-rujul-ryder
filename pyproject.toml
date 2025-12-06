@@ -1,9 +1,9 @@
 [project]
-name = "advanced-site"
+name = "holistic-health-hub"
 version = "0.1.0"
-description = "Add your description here"
+description = "A holistic health and fitness tracker using Drafter and the Gemini API."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.10"
 dependencies = [
     "coverage",
     "drafter",
@@ -13,6 +13,10 @@ dependencies = [
     "matplotlib",
     "pillow",
     "analyze_drafter_site",
+    # new dependencies for gemini and state
+    "google-genai",
+    "python-dotenv",
+    "pydantic",
 ]
 
 [tool.pyright]
